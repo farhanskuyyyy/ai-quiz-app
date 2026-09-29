@@ -1,20 +1,32 @@
-import { useState } from 'react';
-import Header from './components/Header';
+import { useState, useEffect } from 'react';
 import QuizSetup from './components/QuizSetup';
 import QuizCard from './components/QuizCard';
 import QuizResult from './components/QuizResult';
 import AnswerReview from './components/AnswerReview';
-import ProgressBar from './components/ProgressBar';
 import { questions } from './data/questions';
 import { getQuestions, shuffleOptions } from './utils/quizUtils';
 
-function App() {
+export default function App() {
   const [screen, setScreen] = useState('setup');
   const [quizQuestions, setQuizQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [showReview, setShowReview] = useState(false);
+  const [theme, setTheme] = useState('light');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('quiz-theme') || 'light';
+    setTheme(saved);
+    document.documentElement.setAttribute('data-theme', saved);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === 'light' ? 'dark' : 'light';
+    setTheme(next);
+    localStorage.setItem('quiz-theme', next);
+    document.documentElement.setAttribute('data-theme', next);
+  };
 
   const startQuiz = ({ numQuestions, difficulty }) => {
     const selected = getQuestions(questions, numQuestions, difficulty);
@@ -55,22 +67,33 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      <main className="max-w-2xl mx-auto px-4 py-6">
+    <div className="min-h-screen min-h-dvh flex flex-col" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
+      {/* Header */}
+      <header className="sticky top-0 z-20 border-b" style={{ background: 'var(--bg)', borderColor: 'var(--border)' }}>
+        <div className="max-w-lg mx-auto px-4 h-12 flex items-center justify-between">
+          <div>
+            <h1 className="text-sm font-semibold font-heading" style={{ color: 'var(--primary)' }}>AI Quiz</h1>
+            <p className="text-[10px]" style={{ color: 'var(--text-tertiary)' }}>Test your AI knowledge</p>
+          </div>
+          <button onClick={toggleTheme} className="w-8 h-8 flex items-center justify-center rounded-md text-sm"
+            style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
+            {theme === 'light' ? '🌙' : '☀️'}
+          </button>
+        </div>
+      </header>
+
+      {/* Main */}
+      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-4" style={{ paddingBottom: '24px' }}>
         {screen === 'setup' && <QuizSetup onStart={startQuiz} />}
         {screen === 'quiz' && (
-          <>
-            <ProgressBar current={currentIndex + 1} total={quizQuestions.length} />
-            <QuizCard
-              key={currentIndex}
-              question={quizQuestions[currentIndex]}
-              questionNum={currentIndex + 1}
-              totalQuestions={quizQuestions.length}
-              onAnswer={handleAnswer}
-              onNext={handleNext}
-            />
-          </>
+          <QuizCard
+            key={currentIndex}
+            question={quizQuestions[currentIndex]}
+            questionNum={currentIndex + 1}
+            totalQuestions={quizQuestions.length}
+            onAnswer={handleAnswer}
+            onNext={handleNext}
+          />
         )}
         {screen === 'result' && !showReview && (
           <QuizResult
@@ -91,5 +114,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

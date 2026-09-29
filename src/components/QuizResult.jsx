@@ -5,43 +5,43 @@ export default function QuizResult({ score, total, answers, onReview, onTryAgain
   const feedback = getFeedback(percentage);
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center">
-      <div className="mb-6">
-        <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <span className="text-3xl">🏆</span>
-        </div>
-        <h2 className="text-2xl font-bold text-gray-800">Quiz Complete!</h2>
+    <div className="space-y-4">
+      {/* Score Card */}
+      <div className="rounded-lg p-6 text-center" style={{ background: 'var(--primary)' }}>
+        <p className="text-[11px] uppercase tracking-wide text-white/80 mb-2">Skor Anda</p>
+        <p className="text-4xl font-bold font-heading text-white">{score}/{total}</p>
+        <p className="text-2xl font-bold font-heading text-white mt-1">{percentage}%</p>
+        <p className="text-sm font-medium text-white mt-2">{feedback.text}</p>
       </div>
 
-      <div className="bg-gray-50 rounded-xl p-6 mb-6">
-        <p className="text-5xl font-bold text-indigo-600 mb-2">{score}/{total}</p>
-        <p className="text-2xl font-semibold text-gray-700">{percentage}%</p>
-        <p className={`text-lg font-medium mt-2 ${feedback.color}`}>{feedback.text}</p>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="bg-green-50 rounded-xl p-4">
-          <p className="text-2xl font-bold text-green-600">{score}</p>
-          <p className="text-sm text-gray-600">Correct</p>
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="rounded-lg p-4 text-center" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
+          <p className="text-2xl font-bold font-heading" style={{ color: '#22C55E' }}>{score}</p>
+          <p className="text-[11px] uppercase tracking-wide" style={{ color: 'var(--text-secondary)' }}>Benar</p>
         </div>
-        <div className="bg-red-50 rounded-xl p-4">
-          <p className="text-2xl font-bold text-red-600">{total - score}</p>
-          <p className="text-sm text-gray-600">Incorrect</p>
+        <div className="rounded-lg p-4 text-center" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
+          <p className="text-2xl font-bold font-heading" style={{ color: '#EF4444' }}>{total - score}</p>
+          <p className="text-[11px] uppercase tracking-wide" style={{ color: 'var(--text-secondary)' }}>Salah</p>
         </div>
       </div>
 
-      <div className="space-y-3">
+      {/* Actions */}
+      <div className="space-y-2">
         <button onClick={onReview}
-          className="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
-          📋 Review Answers
+          className="w-full py-3 rounded-md font-medium text-white active:scale-[0.98]"
+          style={{ background: 'var(--primary)' }}>
+          Review Jawaban
         </button>
         <button onClick={onTryAgain}
-          className="w-full bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors">
-          🔄 Try Again
+          className="w-full py-3 rounded-md font-medium active:scale-[0.98]"
+          style={{ background: 'var(--surface)', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
+          Coba Lagi
         </button>
         <button onClick={onHome}
-          className="w-full bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors">
-          🏠 Back to Home
+          className="w-full py-3 rounded-md font-medium active:scale-[0.98]"
+          style={{ background: 'var(--surface)', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
+          Kembali ke Awal
         </button>
       </div>
     </div>
