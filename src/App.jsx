@@ -15,6 +15,8 @@ export default function App() {
   const [answers, setAnswers] = useState([]);
   const [showReview, setShowReview] = useState(false);
   const [theme, setTheme] = useState('light');
+  const [direction, setDirection] = useState('forward');
+  const [streak, setStreak] = useState(0);
 
   useEffect(() => {
     const saved = localStorage.getItem('quiz-theme') || 'light';
@@ -37,11 +39,18 @@ export default function App() {
     setScore(0);
     setAnswers([]);
     setShowReview(false);
+    setDirection('forward');
+    setStreak(0);
     setScreen('quiz');
   };
 
   const handleAnswer = (isCorrect, selectedIndex) => {
-    if (isCorrect) setScore(s => s + 1);
+    if (isCorrect) {
+      setScore(s => s + 1);
+      setStreak(s => s + 1);
+    } else {
+      setStreak(0);
+    }
     setAnswers([...answers, {
       ...quizQuestions[currentIndex],
       selected: selectedIndex,
@@ -50,6 +59,7 @@ export default function App() {
   };
 
   const handleNext = () => {
+    setDirection('forward');
     if (currentIndex < quizQuestions.length - 1) {
       setCurrentIndex(i => i + 1);
     } else {
@@ -64,6 +74,8 @@ export default function App() {
     setScore(0);
     setAnswers([]);
     setShowReview(false);
+    setDirection('forward');
+    setStreak(0);
     setScreen('quiz');
   };
 
@@ -97,6 +109,8 @@ export default function App() {
             totalQuestions={quizQuestions.length}
             onAnswer={handleAnswer}
             onNext={handleNext}
+            direction={direction}
+            streak={streak}
           />
         )}
         {screen === 'result' && !showReview && (

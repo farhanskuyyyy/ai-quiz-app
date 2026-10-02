@@ -168,3 +168,129 @@ body {
 
 /* Footer */
 .landing-footer { text-align: center; padding: 24px; font-size: 11px; color: var(--text-tertiary); border-top: 1px solid var(--border); }
+
+/* ============ QuizCard Redesign ============ */
+
+/* Option press scale + focus */
+.opt-btn {
+  transition: transform .1s ease, background-color .2s ease, border-color .2s ease, opacity .2s ease;
+}
+.opt-btn:active:not(:disabled) {
+  transform: scale(.97);
+}
+.opt-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Option ripple solid maroon */
+@keyframes opt-ripple {
+  from { transform: scale(0); opacity: .9; }
+  to { transform: scale(4); opacity: 0; }
+}
+.opt-ripple {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  pointer-events: none;
+  animation: opt-ripple .45s ease-out forwards;
+}
+
+/* Stagger entrance options (--i * 60ms) */
+@keyframes opt-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.opt-item {
+  opacity: 0;
+  animation: opt-in .22s ease-out forwards;
+  animation-delay: calc(var(--i, 0) * 60ms + 120ms);
+}
+
+/* Direction-aware question slide entrance */
+@keyframes q-enter {
+  from { opacity: 0; transform: translateX(calc(var(--dir, 1) * 24px)); }
+  to { opacity: 1; transform: none; }
+}
+.q-enter {
+  animation: q-enter .28s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+/* Skeleton loading pulse solid */
+@keyframes skel-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .45; }
+}
+.skel-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: .5rem;
+  animation: skel-pulse 1.4s ease-in-out infinite;
+}
+
+/* Checkmark draw-on */
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+.check-draw {
+  stroke-dasharray: 32;
+  stroke-dashoffset: 32;
+  animation: draw .35s ease forwards .08s;
+}
+
+/* Shake decaying (wrong) */
+@keyframes shake {
+  15%, 45% { transform: translateX(-5px); }
+  30%, 60% { transform: translateX(5px); }
+  75% { transform: translateX(-3px); }
+  100% { transform: none; }
+}
+.opt-wrong {
+  animation: shake .4s ease-in-out;
+}
+
+/* Pop (correct selected) */
+@keyframes pop {
+  50% { transform: scale(1.02); }
+}
+.opt-correct {
+  animation: pop .25s ease-out;
+}
+
+/* Timer ring danger (last seconds) */
+@keyframes tick-pop {
+  50% { transform: scale(1.12); }
+}
+.ring-danger {
+  animation: tick-pop 1s ease-in-out infinite;
+}
+
+/* Streak flame pop */
+@keyframes flame-pop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.25) rotate(-6deg); }
+  100% { transform: none; }
+}
+.flame-pop {
+  animation: flame-pop .3s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+/* Reduced motion guard */
+@media (prefers-reduced-motion: reduce) {
+  .opt-item,
+  .q-enter,
+  .opt-ripple,
+  .skel-block,
+  .check-draw,
+  .opt-wrong,
+  .opt-correct,
+  .ring-danger,
+  .flame-pop {
+    animation: none !important;
+  }
+  .opt-item { opacity: 1; transform: none; }
+  .check-draw { stroke-dashoffset: 0; }
+  .opt-btn { transition: none; }
+}
