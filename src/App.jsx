@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import LandingPage from './components/LandingPage';
 import QuizSetup from './components/QuizSetup';
 import QuizCard from './components/QuizCard';
 import QuizResult from './components/QuizResult';
@@ -7,7 +8,7 @@ import { questions } from './data/questions';
 import { getQuestions, shuffleOptions } from './utils/quizUtils';
 
 export default function App() {
-  const [screen, setScreen] = useState('setup');
+  const [screen, setScreen] = useState('landing');
   const [quizQuestions, setQuizQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -66,10 +67,12 @@ export default function App() {
     setScreen('quiz');
   };
 
+  const startFromLanding = () => setScreen('setup');
+
   return (
     <div className="min-h-screen min-h-dvh flex flex-col" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
       {/* Header */}
-      <header className="sticky top-0 z-20 border-b" style={{ background: 'var(--bg)', borderColor: 'var(--border)' }}>
+      <header className={screen === 'landing' ? '' : 'sticky top-0 z-20 border-b'} style={screen === 'landing' ? undefined : { background: 'var(--bg)', borderColor: 'var(--border)' }}>
         <div className="max-w-lg mx-auto px-4 h-12 flex items-center justify-between">
           <div>
             <h1 className="text-sm font-semibold font-heading" style={{ color: 'var(--primary)' }}>AI Quiz</h1>
@@ -83,7 +86,8 @@ export default function App() {
       </header>
 
       {/* Main */}
-      <main className="flex-1 max-w-lg mx-auto w-full px-4 py-4" style={{ paddingBottom: '24px' }}>
+      <main className={screen === 'landing' ? 'flex-1' : 'flex-1 max-w-lg mx-auto w-full px-4 py-4'} style={screen === 'landing' ? undefined : { paddingBottom: '24px' }}>
+        {screen === 'landing' && <LandingPage onStart={startFromLanding} />}
         {screen === 'setup' && <QuizSetup onStart={startQuiz} />}
         {screen === 'quiz' && (
           <QuizCard
