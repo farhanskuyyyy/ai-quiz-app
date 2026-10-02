@@ -173,7 +173,7 @@ export default function LandingPage({ onStart }) {
   const revealRefs = useRef([]);
 
   useEffect(() => {
-    const els = revealRefs.current.filter(Boolean);
+    const els = document.querySelectorAll('.reveal');
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
